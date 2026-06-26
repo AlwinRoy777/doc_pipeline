@@ -1,0 +1,49 @@
+pipeline { 
+    agent any 
+        
+    stages {
+        stage ("git checkout") {
+            steps { 
+              
+                git url: 'https://github.com/AlwinRoy777/doc_pipeline', branch: "main" 
+              
+            }
+        }
+        stage ("build docker image"){
+            steps {
+                sh '''
+                docker build -t bigchill10/nginx:latest .
+                '''
+            }
+        }    
+        stage ("docker login") {
+            steps {
+                  withCredentials([usernamePassword(
+                    credentialsId: 'GOAT', 
+                    passwordVariable: 'DOCKER_PASS', 
+                    usernameVariable: 'DOCKER_USER')]) {
+                        sh '''
+                        echo "${DOCKER_PASS}" | docker login -u ${DOCKER_USER} --password-stdin
+                        '''
+                    }
+            }
+        }
+        stage ("docker_image push") {
+            steps { 
+                sh '''
+                docker push bigchill10/nginx:latest 
+                '''
+            }
+        }
+        stage ("container creation and stopping old") {
+            steps {
+                sh'''
+                docker container stop gayle || true
+                docker container rm gayle || true
+                
+            docker run -d --name gayle -p 4320:80 bigchill10/nginx:latest
+                '''
+            }
+        }
+    }
+}
