@@ -37,3 +37,4 @@ COPY index.html /usr/share/nginx/html/
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
+docker build -t doc_pipeline:latest .
