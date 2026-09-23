@@ -1,4 +1,4 @@
-# Doc Pipeline
+	# Doc Pipeline
 
 A lightweight CI/CD project that packages a static HTML website into a Docker container and deploys it through Jenkins.
 
@@ -37,4 +37,10 @@ COPY index.html /usr/share/nginx/html/
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
+
+'''
+
+## Run locally
+
+Build the image:
 docker build -t doc_pipeline:latest .
